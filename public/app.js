@@ -16,7 +16,7 @@
 
       vm.addItem = function() {
         listService.addItem(vm.itemName, vm.itemDescription).then(function (response) {
-          vm.items = response.data;
+          vm.items.push(response.data);
         })
       }
     }

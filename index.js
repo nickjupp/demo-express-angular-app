@@ -31,6 +31,7 @@ function MongoStore(connectionUrl) {
 
   store.add = function (item, callback) {
     new ProductCatalog(item).save(function(error, data){
+      console.log(error ? error : data);
       callback(error ? error : data);
     });
   }
@@ -45,7 +46,7 @@ function InMemoryStore() {
   }
   store.add = function (item, callback) {
     items.push(item);
-    callback(items);
+    callback(item);
   }
 }
 
