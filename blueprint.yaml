@@ -1,0 +1,9 @@
+services:
+- type: org.apache.brooklyn.entity.webapp.nodejs.NodeJsWebAppService
+  brooklyn.config:
+    nodejs.gitRepo.url: https://github.com/cloudsoft/demo-express-angular-app
+    nodejs.app.fileName: index.js
+    shell.env:
+      MONGO_CONNECTION_URL: $brooklyn:entity("mongo-server").attributeWhenReady()
+- type: org.apache.brooklyn.entity.nosql.mongodb.MongoDBServer
+  id: mongo-server
