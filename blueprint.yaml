@@ -1,9 +1,10 @@
 services:
 - type: org.apache.brooklyn.entity.webapp.nodejs.NodeJsWebAppService
   brooklyn.config:
-    nodejs.gitRepo.url: https://github.com/robertgmoss/demo-express-angular-app
+    nodejs.gitRepo.url: https://github.com/robertgmoss/demo-express-angular-app.git
     nodejs.app.fileName: index.js
+    nodejs.app.name: myapp
     shell.env:
-      MONGO_CONNECTION_URL: $brooklyn:format("mongodb://%s:%s/items", entity("mongo-server").attributeWhenReady("host.name"), entity("mongo-server").attributeWhenReady("mongo.server.port"))
+      MONGO_CONNECTION_URL: $brooklyn:formatString("mongodb://%s/items", entity("mongo-server").attributeWhenReady("mongodb.server.endpoint"))
 - type: org.apache.brooklyn.entity.nosql.mongodb.MongoDBServer
   id: mongo-server
