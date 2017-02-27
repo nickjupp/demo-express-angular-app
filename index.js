@@ -6,8 +6,35 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-var itemsStore = process.env.MONGO_CONNECTION_URL ?
-      new MongoStore(process.env.MONGO_CONNECTION_URL) : new InMemoryStore();
+var itemsStore = process.env.MONGO_CONNECTION_URL ? new MongoStore(process.env.MONGO_CONNECTION_URL) :
+      process.env.REDIS_CONNECTION_URL ? new RedisStore(process.env.REDIS_CONNECTION_URL, process.env.REDIS_CONNECTION_PORT) :
+      new InMemoryStore();
+
+function RedisStore(connectionUrl, connectionPort) {
+  var store = this;
+  var redis = require('redis');
+  client = redis.createClient(connectionPort, connectionUrl, {});
+  client.on("error", function (err) {
+    console.log("Error " + err);
+  });
+
+  store.getItems = function (callback) {
+    client.hgetall("items", function(error, data) {
+      if (error) return callback(error);
+      if (!data) return callback([]);
+
+      callback(Object.keys(data).map(function(key) {
+        return JSON.parse(data[key]);
+      }));
+    });
+  }
+  store.add = function (item, callback) {
+    var id = Math.random().toString(36).substring(7);
+    client.hmset("items", id, JSON.stringify(item), function(error, data){
+      callback(error ? error : item);
+    });
+  }
+}
 
 function MongoStore(connectionUrl) {
   var store = this;

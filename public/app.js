@@ -27,12 +27,12 @@
 
       service.addItem = function(name, description) {
         console.log("adding item: ", name, description)
-        return $http.post('/add-item', {name: name, description: description});
+        return $http.post('add-item', {name: name, description: description});
       }
 
       service.getItems = function() {
         console.log("getting items");
-        return $http.get('/get-items');
+        return $http.get('get-items');
       }
     }
 
