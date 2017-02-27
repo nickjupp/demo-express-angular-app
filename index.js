@@ -16,13 +16,15 @@ function RedisStore(connectionUrl, connectionPort) {
   client = redis.createClient(connectionPort, connectionUrl, {});
 
   store.getItems = function (callback) {
-    client.hgetall("items", function(error, replies) {
-      callback(error ? error : replies)
+    client.hgetall("items", function(error, data) {
+      callback(error ? error : data);
     }
   }
   store.add = function (item, callback) {
     var id = Math.random().toString(36).substring(7);
-    client.hset("items", id, item, redis.print);
+    client.hset("items", id, item, function(error, data){
+      callback(error ? error : data);
+    });
   }
 }
 
