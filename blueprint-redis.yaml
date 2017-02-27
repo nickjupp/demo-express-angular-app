@@ -1,0 +1,11 @@
+services:
+- type: org.apache.brooklyn.entity.webapp.nodejs.NodeJsWebAppService
+  brooklyn.config:
+    nodejs.gitRepo.url: https://github.com/robertgmoss/demo-express-angular-app.git
+    nodejs.app.fileName: index.js
+    nodejs.app.name: myapp
+    shell.env:
+      REDIS_CONNECTION_URL: $brooklyn:entity("redis").attributeWhenReady("host.address")
+      REDIS_CONNECTION_PORT: $brooklyn:entity("redis").attributeWhenReady("redis.port")
+- type: org.apache.brooklyn.entity.nosql.redis.RedisStore
+  id: redis
